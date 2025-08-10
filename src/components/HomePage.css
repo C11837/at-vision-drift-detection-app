@@ -1,0 +1,16 @@
+.home-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.home-container h1 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
