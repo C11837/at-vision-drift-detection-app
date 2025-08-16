@@ -4,6 +4,8 @@ This directory contains the React application for the Vision Dashboard.  The UI 
 
 The interface follows a dark theme and makes heavy use of reusable components.  The navigation bar on the left allows access to all major features: model registration, business metrics, drift detection, monitoring, notifications, connectors and user management.  Each page fetches data from the Python API (see `../backend`) and visualises it using tables and charts.
 
+Across the top of the application a **breadcrumb bar** shows your current location and provides quick navigation back to previous sections.  To the right of the breadcrumbs you’ll find a notification bell (with unread count), a user management icon, and a **logout** button.  These controls are available from any page once you are signed in.
+
 ## Prerequisites
 
 * **Node.js (version 18+)** – the frontend relies on Vite for development and build.  Download Node.js from [nodejs.org](https://nodejs.org/) if it is not already installed.
@@ -29,6 +31,14 @@ VITE_API_URL=http://localhost:8000
 ```
 
 Then restart the dev server.  When both the frontend and backend are running you should be able to sign in at <http://localhost:5173/login> using the default credentials (`user` / `password`).  After authentication you will be redirected to the dashboard.
+
+### Model Metadata Registration Workflow
+
+On the **Model Metadata** page you will be prompted to choose whether the data for a new model is **restricted** or not:
+
+* **Restricted** – If you select “Yes”, the UI displays instructions and a link to download the Python client module from the backend.  Run this module on the machine where the data resides.  The script calculates model statistics locally using the helper functions from `data_generator.py` and then posts only the aggregate metrics back to the server.  Once uploaded the model will appear in the Registered Models page.
+
+* **Unrestricted** – If you select “No”, a form is displayed where you can enter the model name, choose a connector and provide paths to the training and production data.  Submitting the form triggers the server to compute the metrics immediately (dummy calculations in the prototype).  The computed metrics are displayed and the new model is added to the registry.
 
 ## Building for Production
 
