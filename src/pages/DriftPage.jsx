@@ -5,17 +5,44 @@ export default function DriftPage() {
   const api = useApi();
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
+  const [models, setModels] = useState([]);
+  const [selectedId, setSelectedId] = useState('');
 
   useEffect(() => {
     api
-      .get('/drift')
+      .get('/models')
+      .then((res) => {
+        setModels(res.data);
+        if (res.data.length > 0) setSelectedId(res.data[0].id);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!selectedId) return;
+    api
+      .get(`/drift/${selectedId}`)
       .then((res) => setData(res.data))
       .catch(() => setError('Failed to load drift information'));
-  }, []);
+  }, [selectedId]);
 
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Drift Detection Engine</h1>
+      <div className="mb-4">
+        <label className="mr-2">Select Model:</label>
+        <select
+          value={selectedId}
+          onChange={(e) => setSelectedId(e.target.value)}
+          className="px-3 py-2 bg-gray-700 text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {models.map((m) => (
+            <option key={m.id} value={m.id}>
+              {m.name}
+            </option>
+          ))}
+        </select>
+      </div>
       {error && <p className="text-red-400 mb-4">{error}</p>}
       {data ? (
         <div className="space-y-6">
